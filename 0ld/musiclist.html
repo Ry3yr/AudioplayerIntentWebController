@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Files List - Poweramp Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .file-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .file-item {
+            margin: 10px 0;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fafafa;
+            transition: background-color 0.2s;
+        }
+        .file-item:hover {
+            background-color: #f0f0f0;
+        }
+        .file-link {
+            text-decoration: none;
+            color: #0066cc;
+            font-weight: bold;
+            display: block;
+            cursor: pointer;
+        }
+        .file-link:hover {
+            color: #004499;
+            text-decoration: underline;
+        }
+        .full-path {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            word-break: break-all;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            display: none;
+        }
+        .loading {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        .player-status {
+            background-color: #d4edda;
+            color: #155724;
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 4px;
+            display: none;
+        }
+        .path-conversion {
+            font-size: 11px;
+            color: #888;
+            margin-top: 3px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Poweramp Music Player</h1>
+        <div id="loadingStatus" class="status loading">Loading file list...</div>
+        <div id="errorStatus" class="status error"></div>
+        <div id="infoStatus" class="status info"></div>
+        <div id="playerStatus" class="player-status"></div>
+        <ul id="fileList" class="file-list"></ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileListElement = document.getElementById('fileList');
+            const loadingStatus = document.getElementById('loadingStatus');
+            const errorStatus = document.getElementById('errorStatus');
+            const infoStatus = document.getElementById('infoStatus');
+            const playerStatus = document.getElementById('playerStatus');
+            
+            const listUrl = 'https://alcea-wisteria.de/PHP/0demo/2025-12-22-DeviceNAppCtrl/[Android]_Poweramp%E2%80%90(Tasker)(20251222)/0ld/list.txt';
+            const commandBaseUrl = 'https://alcea-wisteria.de/PHP/0demo/2025-12-22-DeviceNAppCtrl/[Android]_Poweramp%E2%80%90(Tasker)(20251222)/commandprocess.php';
+            
+            loadingStatus.style.display = 'block';
+            
+            function convertFilePath(filePath) {
+                return filePath.replace(/^\/mnt\/media_rw/, '/sdcard');
+            }
+            
+            function createCommandUrl(originalPath) {
+                const androidPath = convertFilePath(originalPath);
+                const fileUrl = `file://${androidPath}`;
+                const encodedFileUrl = encodeURI(fileUrl).replace(/'/g, "%27");
+                const command = `am start -n com.maxmpz.audioplayer/.PlayerUIActivity -a android.intent.action.VIEW -d "${encodedFileUrl}" -t audio/mpeg`;
+                const encodedCommand = encodeURIComponent(command);
+                return `${commandBaseUrl}?command=${encodedCommand}`;
+            }
+            
+            function playFile(originalPath, displayName) {
+                playerStatus.textContent = `Playing: ${displayName}...`;
+                playerStatus.style.display = 'block';
+                playerStatus.style.backgroundColor = '#fff3cd';
+                playerStatus.style.color = '#856404';
+                
+                const commandUrl = createCommandUrl(originalPath);
+                
+                fetch(commandUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.text();
+                    })
+                    .then(result => {
+                        playerStatus.textContent = `Playing: ${displayName}`;
+                        playerStatus.style.backgroundColor = '#d4edda';
+                        playerStatus.style.color = '#155724';
+                        
+                        setTimeout(() => {
+                            playerStatus.style.display = 'none';
+                        }, 3000);
+                    })
+                    .catch(error => {
+                        playerStatus.textContent = `Error playing ${displayName}: ${error.message}`;
+                        playerStatus.style.backgroundColor = '#f8d7da';
+                        playerStatus.style.color = '#721c24';
+                        
+                        setTimeout(() => {
+                            playerStatus.style.display = 'none';
+                        }, 5000);
+                        console.error('Error playing file:', error);
+                    });
+            }
+            
+            fetch(listUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(text => {
+                    loadingStatus.style.display = 'none';
+                    
+                    const lines = text.split('\n').filter(line => line.trim().length > 0);
+                    
+                    if (lines.length === 0) {
+                        infoStatus.textContent = 'No files found in the list.';
+                        infoStatus.style.display = 'block';
+                        return;
+                    }
+                    
+                    lines.forEach(line => {
+                        const trimmedLine = line.trim();
+                        
+                        let displayName = '';
+                        if (trimmedLine.includes('/mobile/')) {
+                            const parts = trimmedLine.split('/mobile/');
+                            if (parts.length > 1) {
+                                displayName = parts[1];
+                            }
+                        } else {
+                            const pathParts = trimmedLine.split('/').filter(part => part.trim() !== '');
+                            displayName = pathParts.slice(-2).join('/');
+                        }
+                        
+                        const androidPath = convertFilePath(trimmedLine);
+                        const fileUrl = `file://${androidPath}`;
+                        const encodedFileUrl = encodeURI(fileUrl).replace(/'/g, "%27");
+                        
+                        const listItem = document.createElement('li');
+                        listItem.className = 'file-item';
+                        
+                        const link = document.createElement('a');
+                        link.className = 'file-link';
+                        link.textContent = displayName;
+                        link.title = `Click to play in Poweramp: ${displayName}`;
+                        
+                        link.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            playFile(trimmedLine, displayName);
+                        });
+                        
+                        const originalPath = document.createElement('div');
+                        originalPath.className = 'full-path';
+                        originalPath.textContent = `Original path: ${trimmedLine}`;
+                        
+                        const convertedPath = document.createElement('div');
+                        convertedPath.className = 'path-conversion';
+                        convertedPath.textContent = `Android path: ${androidPath}`;
+                        convertedPath.style.color = '#2a7f2a';
+                        
+                        const commandPreview = document.createElement('div');
+                        commandPreview.className = 'full-path';
+                        commandPreview.textContent = `Command: am start -n com.maxmpz.audioplayer/.PlayerUIActivity -a android.intent.action.VIEW -d "${encodedFileUrl}" -t audio/mpeg`;
+                        commandPreview.style.fontStyle = 'italic';
+                        commandPreview.style.color = '#888';
+                        commandPreview.style.marginTop = '3px';
+                        commandPreview.style.fontSize = '11px';
+                        
+                        listItem.appendChild(link);
+                        listItem.appendChild(originalPath);
+                        listItem.appendChild(convertedPath);
+                        listItem.appendChild(commandPreview);
+                        
+                        fileListElement.appendChild(listItem);
+                    });
+                    
+                    infoStatus.textContent = `Loaded ${lines.length} file(s). Click any file to play in Poweramp. Paths automatically converted from /mnt/media_rw to /sdcard.`;
+                    infoStatus.style.display = 'block';
+                })
+                .catch(error => {
+                    loadingStatus.style.display = 'none';
+                    
+                    errorStatus.textContent = `Error loading file list: ${error.message}`;
+                    errorStatus.style.display = 'block';
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+</html>
