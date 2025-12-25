@@ -15,14 +15,14 @@ class ADBAudioControl:
     def __init__(self):
         self.window = tk.Tk()
         self.window.title("Poweramp Remote")
-        self.window.geometry("500x850")
+        self.window.geometry("500x900")
         self.window.configure(bg='#1a1a1a')
 
         # Initialize variables
         self.ip_address = tk.StringVar(value="192.168.0.101")
         self.port = tk.StringVar(value="5555")
         self.status_text = tk.StringVar(value="Ready")
-        self.connection_status = tk.StringVar(value="Not Connected")
+        self.connection_status = tk.StringVar(value="Not Connected (Press RestartADB if this is first run")
         self.files_list = []
         self.selected_file_path = tk.StringVar(value="")
         
@@ -494,7 +494,8 @@ class ADBAudioControl:
             android_path = self.convert_file_path(original_path)
             file_url = f"file://{android_path}"
             encoded_file_url = self.encode_uri_like_js(file_url)
-            adb_command = f'am start -n com.maxmpz.audioplayer/.PlayerUIActivity -a android.intent.action.VIEW -d "{encoded_file_url}" -t audio/mpeg'
+            adb_command = f'am start -a android.intent.action.VIEW -d "{encoded_file_url}" -t "audio/mpeg" -n com.maxmpz.audioplayer/.MainActivity'
+            # adb_command = f'am start -n com.maxmpz.audioplayer/.PlayerUIActivity -a android.intent.action.VIEW -d "{encoded_file_url}" -t audio/mpeg'
             full_adb_command = f'adb -s {ip_address}:{port} shell "{adb_command}"'
             
             display_name = self.extract_display_name(original_path)
