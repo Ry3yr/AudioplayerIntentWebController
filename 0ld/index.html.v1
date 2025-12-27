@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Player Remote</title>
+<details><summary>CMD Shell</summary>
+<pre>
+#!/bin/bash
+URL="https://alcea-wisteria.de/PHP/0demo/2025-12-22-DeviceNAppCtrl/%5BAndroid%5D_Poweramp%E2%80%90%28Tasker%29%2820251222%29/commands.txt"
+echo "Fetching commands from: $URL"
+first_line=$(curl -s "$URL" | head -n 1)
+if [ -z "$first_line" ]; then
+    echo "Error: Could not fetch or file is empty"
+    exit 1
+fi
+echo "First line: $first_line"
+command="${first_line:17}"
+echo "Executing command: $command"
+eval "$command"
+exit_code=$?
+if [ $exit_code -eq 0 ]; then
+    echo "Command executed successfully"
+    delete_url="https://alcea-wisteria.de/PHP/0demo/2025-12-22-DeviceNAppCtrl/%5BAndroid%5D_Poweramp%E2%80%90%28Tasker%29%2820251222%29/commandprocess.php?delete=ok"
+    echo "Making GET request to: $delete_url"
+    delete_response=$(curl -s "$delete_url")
+    curl_exit_code=$?
+    if [ $curl_exit_code -eq 0 ]; then
+        echo "Delete request sent successfully"
+        echo "Response: $delete_response"
+    else
+        echo "Warning: Failed to send delete request (curl exit code: $curl_exit_code)"
+    fi
+else
+    echo "Error executing command"
+    exit 1
+fi
+
+<hr style="width:50%;float:left;">
+<u>AudioIntentReceive.macro (Macrodroid)</u>
+{"globalVariables":[],"macro":{"disabledTimestamp":0,"exportedActionBlocks":[],"forceEvenIfNotEnabledTimestamp":0,"isActionBlock":false,"isExtra":false,"isFavourite":false,"lastEditedTimestamp":1766437547779,"localVariables":[],"localVarsAlphabetical":true,"m_GUID":-7890590420177522383,"m_actionList":[{"blockNextAction":false,"m_nonRoot":false,"m_script":"#!/bin/bash\nURL\u003d\"https://alcea-wisteria.de/PHP/0demo/2025-12-22-DeviceNAppCtrl/%5BAndroid%5D_Poweramp%E2%80%90%28Tasker%29%2820251222%29/commands.txt\"\necho \"Fetching commands from: $URL\"\nfirst_line\u003d$(curl -s \"$URL\" | head -n 1)\nif [ -z \"$first_line\" ]; then\n    echo \"Error: Could not fetch or file is empty\"\n    exit 1\nfi\necho \"First line: $first_line\"\ncommand\u003d\"${first_line:17}\"\necho \"Executing command: $command\"\neval \"$command\"\nexit_code\u003d$?\nif [ $exit_code -eq 0 ]; then\n    echo \"Command executed successfully\"\n    delete_url\u003d\"https://alcea-wisteria.de/PHP/0demo/2025-12-22-DeviceNAppCtrl/%5BAndroid%5D_Poweramp%E2%80%90%28Tasker%29%2820251222%29/commandprocess.php?delete\u003dok\"\n    echo \"Making GET request to: $delete_url\"\n    delete_response\u003d$(curl -s \"$delete_url\")\n    curl_exit_code\u003d$?\n    if [ $curl_exit_code -eq 0 ]; then\n        echo \"Delete request sent successfully\"\n        echo \"Response: $delete_response\"\n    else\n        echo \"Warning: Failed to send delete request (curl exit code: $curl_exit_code)\"\n    fi\nelse\n    echo \"Error executing command\"\n    exit 1\nfi\n","timeoutSeconds":30,"useHelper":false,"useShizuku":false,"disableLogging":false,"m_SIGUID":-7400398854717422661,"m_classType":"ShellScriptAction","m_constraintList":[],"m_isDisabled":false,"m_isOrCondition":false},{"m_delayInMilliSeconds":0,"m_delayInSeconds":2,"m_useAlarm":true,"unitForVariables":0,"disableLogging":false,"m_SIGUID":-6918740774120871296,"m_classType":"PauseAction","m_constraintList":[],"m_isDisabled":false,"m_isOrCondition":false},{"m_appName":"Task Shortcut","m_intentEncoded":"task:TrackAudioPlayerSend#Intent;action\u003dnet.dinglisch.android.tasker.WIDICKYUM;component\u003dnet.dinglisch.android.taskerm/.IntentHandler;S.mcro\u003d%3CTask%20sr%3D%22%22%3E%3Cid%3E-3%3C%2Fid%3E%3CImg%20sr%3D%22icn%22ve%3D%222%22%3E%3Ccls%3Ecom.maxmpz.audioplayer.standard_adaptive%3C%2Fcls%3E%3Cpkg%3Ecom.maxmpz.audioplayer%3C%2Fpkg%3E%3C%2FImg%3E%3Cnme%3ETrackAudioPlayerSend%3C%2Fnme%3E%3Cpri%3E7%3C%2Fpri%3E%3Crty%3E2%3C%2Frty%3E%3CAction%20sr%3D%22act0%22ve%3D%227%22%3E%3CStr%20sr%3D%22arg0%22ve%3D%223%22%3ETrackAudioPlayerSend%3C%2FStr%3E%3CInt%20sr%3D%22arg1%22val%3D%227%22%2F%3E%3CStr%20sr%3D%22arg2%22ve%3D%223%22%2F%3E%3CStr%20sr%3D%22arg3%22ve%3D%223%22%2F%3E%3CStr%20sr%3D%22arg4%22ve%3D%223%22%2F%3E%3CInt%20sr%3D%22arg5%22val%3D%221%22%2F%3E%3Ccode%3E130%3C%2Fcode%3E%3C%2FAction%3E%3Ccdate%3E1766436510717%3C%2Fcdate%3E%3Cedate%3E1766436510717%3C%2Fedate%3E%3C%2FTask%3E;end","m_name":"TrackAudioPlayerSend","disableLogging":false,"m_SIGUID":-6281820491066775691,"m_classType":"LaunchShortcutAction","m_constraintList":[],"m_isDisabled":false,"m_isOrCondition":false}],"m_category":"Nicht kategorisiert","m_constraintList":[{"checkThisMacro":true,"m_invoked":false,"m_macroIds":[],"m_macroNames":[],"m_timePeriodSeconds":4,"disableLogging":false,"m_SIGUID":-8368519708659995381,"m_classType":"LastRunTimeConstraint","m_constraintList":[],"m_isDisabled":false,"m_isOrCondition":false},{"customAddedSSIDs":[],"m_SSIDList":[null],"m_wifiState":0,"disableLogging":false,"m_SIGUID":-7151573572426603523,"m_classType":"WifiConstraint","m_constraintList":[],"m_isDisabled":false,"m_isOrCondition":false},{"m_anyDevice":true,"m_btState":2,"m_deviceName":"Any Device","disableLogging":false,"m_SIGUID":-5759114516428804920,"m_classType":"BluetoothConstraint","m_constraintList":[],"m_isDisabled":false,"m_isOrCondition":false},{"a":true,"m_screenOn":false,"disableLogging":false,"m_SIGUID":-5961729435389429292,"m_classType":"ScreenOnOffConstraint","m_constraintList":[],"m_isDisabled":false,"m_isOrCondition":false}],"m_description":"","m_descriptionOpen":false,"m_enabled":true,"m_excludeLog":false,"m_headingColor":0,"m_isOrCondition":false,"m_name":"AudioIntentReceive","m_triggerList":[{"m_ignoreReferenceStartTime":false,"m_minutes":0,"m_seconds":31,"m_startHour":0,"m_startMinute":0,"m_useAlarm":true,"disableLogging":false,"m_SIGUID":-6597252848197539427,"m_classType":"RegularIntervalTrigger","m_constraintList":[],"m_isDisabled":true,"m_isOrCondition":false},{"disableLogging":false,"m_SIGUID":-4665790134467948861,"m_classType":"ShortcutTrigger","m_constraintList":[],"m_isDisabled":false,"m_isOrCondition":false},{"m_ignoreReferenceStartTime":false,"m_minutes":0,"m_seconds":32,"m_startHour":0,"m_startMinute":0,"m_useAlarm":true,"disableLogging":false,"m_SIGUID":-9050416507675238679,"m_classType":"RegularIntervalTrigger","m_constraintList":[{"m_externalPower":false,"m_powerConnectedOptions":[true,true,true],"disableLogging":false,"m_SIGUID":-6029441548626236214,"m_classType":"ExternalPowerConstraint","m_constraintList":[],"m_isDisabled":false,"m_isOrCondition":false}],"m_isDisabled":false,"m_isOrCondition":false}]},"macroExportVersion":1}
+
+
+
+<hr style="width:50%;float:left;">
+<u>Tasker.psk.xml</u>- Also requires "Curr Track" from <a href="https://ry3yr.github.io/tasker.zip">here</a> which will chreate the Trackinfo to be send on every Poweramp track change<br>
+&lt;TaskerData sr="" dvi="1" tv="4.9u4m"&gt;
+	&lt;Task sr="task13"&gt;
+		&lt;cdate&gt;1766436427918&lt;/cdate&gt;
+		&lt;edate&gt;1766436443750&lt;/edate&gt;
+		&lt;id&gt;13&lt;/id&gt;
+		&lt;nme&gt;TrackAudioPlayerSend&lt;/nme&gt;
+		&lt;Action sr="act0" ve="7"&gt;
+			&lt;code&gt;118&lt;/code&gt;
+			&lt;Str sr="arg0" ve="3"&gt;https&#58;//alcea-wisteria.de/PHP/0demo/2025-12-22-DeviceNAppCtrl/%5BAndroid%5D_Poweramp%E2%80%90%28Tasker%29%2820251222%29/save_track.php?track=%Trackinfo&lt;/Str&gt;
+			&lt;Str sr="arg1" ve="3"/&gt;
+			&lt;Str sr="arg2" ve="3"/&gt;
+			&lt;Str sr="arg3" ve="3"/&gt;
+			&lt;Str sr="arg4" ve="3"/&gt;
+			&lt;Int sr="arg5" val="10"/&gt;
+			&lt;Str sr="arg6" ve="3"/&gt;
+			&lt;Str sr="arg7" ve="3"/&gt;
+			&lt;Int sr="arg8" val="0"/&gt;
+		&lt;/Action&gt;
+	&lt;/Task&gt;
+&lt;/TaskerData&gt;
+<!---Tasker tsk.xml end -->
+<hr></pre></details>
+
+
+
+
+    <style>
+        .player-window {
+            width: 300px;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-top-color: #dfdfdf;
+            border-left-color: #dfdfdf;
+            border-right-color: #808080;
+            border-bottom-color: #808080;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.5);
+        }
+        
+        .title-bar {
+            background: linear-gradient(90deg, #000080, #1084d0);
+            color: white;
+            padding: 3px 5px;
+            font-size: 11px;
+            font-weight: bold;
+            border-bottom: 2px solid #c0c0c0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .title-text {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .window-controls {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .control-btn-small {
+            width: 16px;
+            height: 14px;
+            background: #c0c0c0;
+            border: 1px solid;
+            border-top-color: #dfdfdf;
+            border-left-color: #dfdfdf;
+            border-right-color: #808080;
+            border-bottom-color: #808080;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+        }
+        
+        .control-btn-small:active {
+            border-top-color: #808080;
+            border-left-color: #808080;
+            border-right-color: #dfdfdf;
+            border-bottom-color: #dfdfdf;
+        }
+        
+        .now-playing {
+            background: white;
+            border: 2px inset;
+            height: 60px;
+            margin: 10px;
+            padding: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .song-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #000;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+        
+        .song-album {
+            font-size: 11px;
+            color: #404040;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+        
+        .song-time {
+            font-size: 10px;
+            color: #808080;
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+        }
+        
+        .no-song {
+            font-size: 12px;
+            color: #808080;
+            font-style: italic;
+            text-align: center;
+            line-height: 44px;
+        }
+        
+        .transport-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            padding: 10px;
+            background: #c0c0c0;
+            border-top: 2px solid #808080;
+        }
+        
+        .transport-btn {
+            width: 50px;
+            height: 50px;
+            background: #c0c0c0;
+            border: 2px outset;
+            border-top-color: #dfdfdf;
+            border-left-color: #dfdfdf;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        
+        .transport-btn:active {
+            border: 2px inset;
+            border-top-color: #808080;
+            border-left-color: #808080;
+        }
+        
+        .play-btn {
+            width: 60px;
+            background: #00a000;
+            color: white;
+            font-size: 12px;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .play-btn:active {
+            background: #008000;
+        }
+        
+        .play-text {
+            font-size: 10px;
+            margin-top: 2px;
+        }
+        
+        .status-bar {
+            background: #c0c0c0;
+            border-top: 2px solid #808080;
+            padding: 3px 6px;
+            font-size: 11px;
+            color: #000;
+            height: 18px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        
+        .marquee {
+            display: inline-block;
+            white-space: nowrap;
+            padding-left: 100%;
+            animation: marquee 10s linear infinite;
+        }
+        
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        .marquee:hover {
+            animation-play-state: paused;
+        }
+        
+        .command-hint {
+            font-size: 9px;
+            color: #404040;
+            text-align: center;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="player-window">
+        <div class="title-bar">
+            <div class="title-text">
+                <span>🎵</span>
+                Audio Player Remote
+            </div>
+            <div class="window-controls">
+                <button class="control-btn-small" title="Minimize">_</button>
+                <button class="control-btn-small" title="Maximize">□</button>
+                <button class="control-btn-small" title="Close" onclick="window.close()">X</button>
+            </div>
+        </div>
+        
+        <div class="now-playing">
+            <div class="no-song" id="noSong">No song playing</div>
+            <div class="song-info" id="songInfo" style="display: none;">
+                <div class="song-title marquee" id="songTitle"></div>
+                <div class="song-album marquee" id="songAlbum"></div>
+                <div class="song-time" id="songTime"></div>
+            </div>
+        </div>
+        
+        <div class="transport-controls">
+            <button class="transport-btn" onclick="sendCommand(7)" title="Previous Album (7)">
+                &lt;&lt;
+                <div class="command-hint">(7)</div>
+            </button>
+            
+            <button class="transport-btn" onclick="sendCommand(5)" title="Previous Song (5)">
+                &lt;
+                <div class="command-hint">(5)</div>
+            </button>
+            
+            <button class="transport-btn play-btn" onclick="sendCommand(1)" id="playPauseBtn" title="Play/Pause (1)">
+                ▶
+                <div class="play-text" id="playText">PLAY</div>
+                <div class="command-hint">(1)</div>
+            </button>
+            
+            <button class="transport-btn" onclick="sendCommand(4)" title="Next Song (4)">
+                &gt;
+                <div class="command-hint">(4)</div>
+            </button>
+            
+            <button class="transport-btn" onclick="sendCommand(6)" title="Next Album (6)">
+                &gt;&gt;
+                <div class="command-hint">(6)</div>
+            </button>
+        </div>
+        
+        <div class="status-bar" id="status">
+            Ready
+        </div>
+    </div>
+
+    <script>
+        const API_ENDPOINT = 'commandprocess.php';
+        const NOW_PLAYING_FILE = 'currently_playing.txt';
+        
+function parseNowPlayingLine(line) {
+    if (!line || line.trim() === '') return null;
+    const match = line.match(/^"(\d{14})"_"(.*?)"\s*-\s*"(.*?)"$/);
+    if (match) {
+        const [, timestamp, title, album] = match;
+        const hour = timestamp.substring(8, 10);
+        const minute = timestamp.substring(10, 12);
+        const day = timestamp.substring(6, 8);
+        const month = timestamp.substring(4, 6);
+        const formattedTime = `${hour}:${minute} ${day}/${month}`;
+        return {
+            timestamp: formattedTime,
+            title: title.trim(),
+            album: album.trim() || ""
+        };
+    }
+    
+    return null;
+}
+        
+        async function loadNowPlaying() {
+            const noSongElement = document.getElementById('noSong');
+            const songInfoElement = document.getElementById('songInfo');
+            const songTitleElement = document.getElementById('songTitle');
+            const songAlbumElement = document.getElementById('songAlbum');
+            const songTimeElement = document.getElementById('songTime');
+            
+            try {
+                // Cache bust with timestamp
+                const response = await fetch(NOW_PLAYING_FILE + '?t=' + Date.now());
+                
+                if (response.ok) {
+                    const text = await response.text();
+                    const lines = text.trim().split('\n');
+                    //const latestLine = lines[lines.length - 1]; //Gets last line
+                    const latestLine = lines[0];  // Gets FIRST line (NEWEST/TOPMOST entry)
+                    
+                    const songInfo = parseNowPlayingLine(latestLine);
+                    
+                    if (songInfo) {
+                        songTitleElement.textContent = songInfo.title;
+                        songAlbumElement.textContent = songInfo.album;
+                        songTimeElement.textContent = songInfo.timestamp;
+                        
+                        noSongElement.style.display = 'none';
+                        songInfoElement.style.display = 'block';
+                        
+                        // Adjust marquee speed based on text length
+                        const titleLength = songInfo.title.length;
+                        const albumLength = songInfo.album.length;
+                        const titleSpeed = Math.max(8, titleLength / 4);
+                        const albumSpeed = Math.max(8, albumLength / 4);
+                        
+                        songTitleElement.style.animationDuration = `${titleSpeed}s`;
+                        songAlbumElement.style.animationDuration = `${albumSpeed}s`;
+                        
+                        updateStatus(`Playing: ${songInfo.title.substring(0, 30)}...`);
+                    } else {
+                        noSongElement.style.display = 'block';
+                        songInfoElement.style.display = 'none';
+                        noSongElement.textContent = 'No song playing';
+                        updateStatus('Stopped');
+                    }
+                } else {
+                    noSongElement.style.display = 'block';
+                    songInfoElement.style.display = 'none';
+                    noSongElement.textContent = 'File not found';
+                    updateStatus('Error loading file');
+                }
+            } catch (error) {
+                noSongElement.style.display = 'block';
+                songInfoElement.style.display = 'none';
+                noSongElement.textContent = 'Error loading';
+                updateStatus('Connection error');
+            }
+        }
+        
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+        
+        async function sendCommand(commandNumber) {
+            updateStatus(`Sending command ${commandNumber}...`);
+            
+            try {
+                const intentString = `am broadcast "intent:#Intent;action=com.maxmpz.audioplayer.API_COMMAND;package=com.maxmpz.audioplayer;i.cmd=${commandNumber};end"`;
+                const response = await fetch(`${API_ENDPOINT}?command=${encodeURIComponent(intentString)}`);
+                
+                if (response.ok) {
+                    // Update play/pause button for command 1
+                    if (commandNumber === 1) {
+                        const playBtn = document.getElementById('playPauseBtn');
+                        const playText = document.getElementById('playText');
+                        const symbol = playBtn.innerHTML.charAt(0);
+                        
+                        if (symbol === '▶') {
+                            playBtn.innerHTML = '⏸<div class="play-text" id="playText">PAUSE</div><div class="command-hint">(1)</div>';
+                            playText.textContent = 'PAUSE';
+                        } else {
+                            playBtn.innerHTML = '▶<div class="play-text" id="playText">PLAY</div><div class="command-hint">(1)</div>';
+                            playText.textContent = 'PLAY';
+                        }
+                    }
+                    
+                    updateStatus(`Command ${commandNumber} sent`);
+                    
+                    // Refresh now playing after a short delay
+                    setTimeout(loadNowPlaying, 300);
+                } else {
+                    updateStatus('Error sending command');
+                }
+            } catch (error) {
+                updateStatus('Network error');
+            }
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (event) => {
+            // Prevent default for space to avoid scrolling
+            if (event.key === ' ') {
+                event.preventDefault();
+            }
+            
+            switch(event.key) {
+                case '1': case ' ': sendCommand(1); break;
+                case '4': case 'ArrowRight': sendCommand(4); break;
+                case '5': case 'ArrowLeft': sendCommand(5); break;
+                case '6': case 'ArrowUp': sendCommand(6); break;
+                case '7': case 'ArrowDown': sendCommand(7); break;
+            }
+        });
+        
+        // Load on startup
+        loadNowPlaying();
+        
+        // Auto-refresh every 3 seconds
+        setInterval(loadNowPlaying, 3000);
+    </script>
+<a href="https://alcea-wisteria.de/PHP/0demo/2025-12-22-DeviceNAppCtrl/[Android]_Poweramp‐(Tasker)(20251222)/0ld/musiclist.html" target="_blank">musiclist</a> <a href="https://alcea-wisteria.de/PHP/0demo/2025-12-22-DeviceNAppCtrl/[Android]_Poweramp‐(Tasker)(20251222)/0ld/list.txt" target="_blank" style="color: gray;">list</a>
+</body>
+</html>
